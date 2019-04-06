@@ -1,0 +1,21 @@
+eg„
+Raw input ranges:
+[Range {
+	start: 94133
+	end: 94133
+}, Range {
+	start: 94200
+	end: 94299
+}, Range {
+	start: 94226
+	end: 94399
+}]
+egl
+Consolidated exclusion ranges:
+[Range {
+	start: 94133
+	end: 94133
+}, Range {
+	start: 94200
+	end: 94399
+}]

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nisum.seriesgenerator.service.SeriesGeneratorServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-04-06T09:15:32" hostname="ADMIN-PC" time="0.005">
+  <properties/>
+  <testcase name="exclusionsWithNull" classname="com.nisum.seriesgenerator.service.SeriesGeneratorServiceTest" time="0.001"/>
+  <testcase name="instance" classname="com.nisum.seriesgenerator.service.SeriesGeneratorServiceTest" time="0.0"/>
+  <testcase name="exclusions" classname="com.nisum.seriesgenerator.service.SeriesGeneratorServiceTest" time="0.003"/>
+  <system-out><![CDATA[
+Raw input ranges:
+[Range {
+	start: 94133
+	end: 94133
+}, Range {
+	start: 94200
+	end: 94299
+}, Range {
+	start: 94226
+	end: 94399
+}]
+
+Consolidated exclusion ranges:
+[Range {
+	start: 94133
+	end: 94133
+}, Range {
+	start: 94200
+	end: 94399
+}]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

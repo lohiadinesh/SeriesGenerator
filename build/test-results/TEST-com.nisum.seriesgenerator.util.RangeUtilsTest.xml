@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nisum.seriesgenerator.util.RangeUtilsTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2019-04-06T09:15:32" hostname="ADMIN-PC" time="0.011">
+  <properties/>
+  <testcase name="consolidateRangeFromNull" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="checkInRangeLower" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfStringExcludedNullRange" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfBadStringExcluded" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="checkIfBadIntExcluded" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="consolidateRangeAdjacentStart" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkInRangeWithNull" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkInRangeEqualsEnd" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfIntExcludedNullRange" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="consolidateRangeNoOverlapCorrectOrder" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfStringNotExcluded" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="consolidateRangeNoOverlap" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="consolidateRangeFromOne" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="checkInRangeEqualsStart" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfNullExcludedRange1" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfStringExcludedRange1" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="checkIfStringExcludedRange2" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfNegativeIntExcluded" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="consolidateRangeOverlapStartAndEnd" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfIntExcludedRange1" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfIntExcludedRange2" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="consolidateRangeOverlapStart" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkIfIntNotExcluded" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <testcase name="checkInRangeInBetween" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.001"/>
+  <testcase name="checkInRangeHigher" classname="com.nisum.seriesgenerator.util.RangeUtilsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Range.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SeriesGenerator</a> &gt; <a href="index.source.html" class="el_package">com.nisum.seriesgenerator.bean</a> &gt; <span class="el_source">Range.java</span></div><h1>Range.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package com.nisum.seriesgenerator.bean;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.nisum.seriesgenerator.util.RangeUtils;
+
+/**
+ * @author Dinesh Kumar Lohia
+ * @email lohiadinesh@gmail.com
+ *
+ */
+
+public class Range implements Comparable&lt;Range&gt; {
+	private int start;
+	private int end;
+<span class="fc" id="L23">	private static Pattern rangePattern = Pattern.compile(&quot;\\[?\\s*(\\d{1,5})\\s*,\\s*(\\d{1,5})\\s*]?&quot;);</span>
+
+	/**
+	 * A comparator that uses both {@code start} and {@code end} values.
+	 */
+<span class="fc" id="L28">	public static Comparator&lt;Range&gt; COMPARATOR = Comparator.comparingInt(Range::getStart)</span>
+<span class="fc" id="L29">			.thenComparingInt(Range::getEnd);</span>
+
+	/**
+	 * Sets the start and end code ranges.
+	 * 
+	 * @param range A string of exactly two code values in the format of
+	 *              [#####,#####]
+	 * @throws IllegalArgumentException when the format of the range is incorrect
+	 *
+	 *                                  Note: the [] are optional and there may be
+	 *                                  any amount of whitespace before/after the
+	 *                                  comma and within the brackets
+	 */
+<span class="fc" id="L42">	public Range(String range) {</span>
+<span class="fc" id="L43">		final Matcher matcher = rangePattern.matcher(range);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (matcher.matches()) {</span>
+<span class="fc" id="L45">			setRange(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)));</span>
+		} else {
+<span class="fc" id="L47">			throw new IllegalArgumentException(&quot;Invalid code range: &quot; + range);</span>
+		}
+<span class="fc" id="L49">	}</span>
+
+	/**
+	 * Sets the start and end code ranges.
+	 * 
+	 * @param range An int[] of exactly two code values ranging from 0-99999,
+	 *              representing the start and end range
+	 * @throws IllegalArgumentException when the code value is not within the
+	 *                                  supported range
+	 */
+<span class="fc" id="L59">	public Range(int[] range) {</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		if (range.length == 2) {</span>
+<span class="fc" id="L61">			setRange(range[0], range[1]);</span>
+		} else {
+<span class="fc" id="L63">			throw new IllegalArgumentException(</span>
+<span class="fc" id="L64">					&quot;Invalid code range - exactly two values must be provided: &quot; + Arrays.toString(range));</span>
+		}
+<span class="fc" id="L66">	}</span>
+
+	/**
+	 * Sets the start and end code ranges.
+	 * 
+	 * @param range A List&amp;lt;Integer&amp;gt; of exactly two code values ranging from
+	 *              0-99999, representing the start and end range
+	 * @throws IllegalArgumentException when the code value is not within the
+	 *                                  supported range
+	 */
+<span class="fc" id="L76">	public Range(List&lt;Integer&gt; range) {</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		if (range.size() == 2) {</span>
+<span class="fc" id="L78">			setRange(range.get(0), range.get(1));</span>
+		} else {
+<span class="fc" id="L80">			throw new IllegalArgumentException(&quot;Invalid code range - exactly two values must be provided: &quot; + range);</span>
+		}
+<span class="fc" id="L82">	}</span>
+
+	/**
+	 * Creates and returns a copy constructor of the object.
+	 * 
+	 * @param range The Range object to be copied
+	 * @return The newly copied object
+	 */
+	public static Range copy(Range range) {
+<span class="fc" id="L91">		return new Range(new int[] { range.getStart(), range.getEnd() });</span>
+	}
+
+	/**
+	 * Overridden method to compare Range objects.
+	 * 
+	 * @param range the Range object to be compared
+	 * @return a negative integer, zero, or a positive integer as this object is
+	 *         less than, equal to, or greater than the specified object
+	 */
+	@Override
+	public int compareTo(Range range) {
+<span class="fc" id="L103">		return Comparator.comparing(Range::getStart).thenComparing(Range::getEnd).compare(this, range);</span>
+	}
+
+	/**
+	 * Retrieves the value for the end of the code range.
+	 * 
+	 * @return The end value for the code range
+	 */
+	public int getEnd() {
+<span class="fc" id="L112">		return this.end;</span>
+	}
+
+	/**
+	 * Return the Range as an int[].
+	 * 
+	 * @return An int[] containing the start and end values for this object
+	 */
+	public int[] getRangeArray() {
+<span class="fc" id="L121">		return new int[] { this.start, this.end };</span>
+	}
+
+	/**
+	 * Return the Range as a String in the format of {@code [00000,99999]}.
+	 * 
+	 * @return An int[] containing the start and end values for this object
+	 */
+	public String getRangeStr() {
+<span class="fc" id="L130">		return &quot;[&quot; + String.format(&quot;%05d&quot;, this.start) + &quot;,&quot; + String.format(&quot;%05d&quot;, this.end) + &quot;]&quot;;</span>
+	}
+
+	/**
+	 * Retrieves the value for the start of the code range.
+	 * 
+	 * @return The start value for the code range
+	 */
+	public int getStart() {
+<span class="fc" id="L139">		return this.start;</span>
+	}
+
+	/**
+	 * Checks if the specified Range can be merged with this instance (adjacent or
+	 * overlaps either the start or end).
+	 * 
+	 * @param merge The Range object to check against
+	 * @return true if either the start or end of the specific range overlaps the
+	 *         current range
+	 */
+	public boolean isMergeable(Range merge) {
+<span class="fc" id="L151">		boolean result = false;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">		if (merge != null) {</span>
+<span class="fc bfc" id="L153" title="All 4 branches covered.">			result = ((merge.end + 1 == this.start) || (merge.start - 1) == this.end</span>
+<span class="fc bfc" id="L154" title="All 4 branches covered.">					|| RangeUtils.isInRange(merge.start, this) || RangeUtils.isInRange(merge.end, this)</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">					|| RangeUtils.isInRange(this.start, merge));</span>
+		}
+<span class="fc" id="L157">		return result;</span>
+	}
+
+	/**
+	 * Merges any overlapped values from the specified range into this instance.
+	 * 
+	 * @param range The Range object to merge into this instance
+	 */
+	public void merge(Range range) {
+<span class="fc bfc" id="L166" title="All 4 branches covered.">		if (range != null &amp;&amp; isMergeable(range)) {</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">			if (range.start &lt; this.start) {</span>
+<span class="fc" id="L168">				this.start = range.start;</span>
+			}
+<span class="fc bfc" id="L170" title="All 2 branches covered.">			if (range.end &gt; this.end) {</span>
+<span class="fc" id="L171">				this.end = range.end;</span>
+			}
+		}
+<span class="fc" id="L174">	}</span>
+
+	/**
+	 * Sets the start and end code ranges.
+	 * 
+	 * @param start The starting code
+	 * @param end   The ending code
+	 *
+	 *              Note: the order of the parameter values is unimportant as the
+	 *              minimum and maximum values will be determined internally
+	 */
+	private void setRange(int start, int end) {
+<span class="fc bfc" id="L186" title="All 4 branches covered.">		if (start &lt; 0 || start &gt; 99999) {</span>
+<span class="fc" id="L187">			throw new IllegalArgumentException(&quot;Invalid start value for code range: &quot; + start);</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">		} else if (end &lt; 0 || end &gt; 99999) {</span>
+<span class="fc" id="L189">			throw new IllegalArgumentException(&quot;Invalid end value for code range: &quot; + end);</span>
+		}
+<span class="fc bfc" id="L191" title="All 2 branches covered.">		if (start &lt; end) {</span>
+<span class="fc" id="L192">			this.start = start;</span>
+<span class="fc" id="L193">			this.end = end;</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">		} else if (start &gt; end) {</span>
+<span class="fc" id="L195">			this.start = end;</span>
+<span class="fc" id="L196">			this.end = start;</span>
+		} else {
+<span class="fc" id="L198">			this.start = start;</span>
+<span class="fc" id="L199">			this.end = start;</span>
+		}
+<span class="fc" id="L201">	}</span>
+
+	/**
+	 * Returns a string representation of this instance.
+	 */
+	@Override
+	public String toString() {
+<span class="fc" id="L208">		final String indent = &quot;\n\t&quot;;</span>
+<span class="fc" id="L209">		return &quot;Range {&quot; + indent + &quot;start: &quot; + String.format(&quot;%05d&quot;, this.start) + indent + &quot;end: &quot;</span>
+<span class="fc" id="L210">				+ String.format(&quot;%05d&quot;, this.end) + &quot;\n}&quot;;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

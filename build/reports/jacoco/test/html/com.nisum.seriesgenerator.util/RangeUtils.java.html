@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RangeUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SeriesGenerator</a> &gt; <a href="index.source.html" class="el_package">com.nisum.seriesgenerator.util</a> &gt; <span class="el_source">RangeUtils.java</span></div><h1>RangeUtils.java</h1><pre class="source lang-java linenums">package com.nisum.seriesgenerator.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.nisum.seriesgenerator.bean.Range;
+import com.nisum.seriesgenerator.service.SeriesGeneratorService;
+
+/**
+ * Utility features to load, and perform operations on ranges.
+ * 
+ * @author Dinesh Kumar Lohia
+ * @email lohiadinesh@gmail.com
+ *
+ */
+
+<span class="nc" id="L24">public class RangeUtils {</span>
+
+	/**
+	 * Loads all ranges defined in location
+	 * 
+	 * @param location text file location
+	 * @return list of ranges
+	 */
+	public static List&lt;Range&gt; loadRanges(final String location) {
+<span class="fc" id="L33">		final List&lt;Range&gt; inputRanges = new ArrayList&lt;&gt;();</span>
+<span class="pc" id="L34">		try (BufferedReader br = new BufferedReader(</span>
+<span class="fc" id="L35">				new InputStreamReader(SeriesGeneratorService.class.getResourceAsStream(location)))) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">			for (String line; (line = br.readLine()) != null;) {</span>
+<span class="fc" id="L37">				inputRanges.add(new Range(line));</span>
+			}
+<span class="pc bpc" id="L39" title="6 of 8 branches missed.">		} catch (IOException e) {</span>
+<span class="nc" id="L40">			System.err.println(e.getMessage());</span>
+<span class="nc" id="L41">			e.printStackTrace(System.err);</span>
+<span class="fc" id="L42">		}</span>
+<span class="fc" id="L43">		return inputRanges;</span>
+	}
+
+<span class="fc" id="L46">	private static Pattern CodePattern = Pattern.compile(&quot;(\\d{5})&quot;);</span>
+
+	/**
+	 * Consolidates a list of Range objects into the shortest possible grouping of
+	 * ranges.
+	 * 
+	 * @param ranges The list of Range objects to be processed
+	 * @return A List of sorted (ascending) Range objects
+	 */
+	public static List&lt;Range&gt; consolidate(List&lt;Range&gt; ranges) {
+<span class="fc" id="L56">		final Set&lt;Range&gt; sortedRanges = new TreeSet&lt;&gt;(Range.COMPARATOR);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		if (ranges != null) {</span>
+<span class="fc" id="L58">			ranges.sort(Range.COMPARATOR);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">			for (Range zcr : ranges) {</span>
+				// create a copy, so the original object is not change by a future merge
+<span class="fc" id="L61">				final Range merge = Range.copy(zcr);</span>
+<span class="fc" id="L62">				boolean didOverlap = false;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">				for (Range existingRange : sortedRanges) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">					if (existingRange.isMergeable(merge)) {</span>
+<span class="fc" id="L65">						existingRange.merge(merge);</span>
+<span class="fc" id="L66">						didOverlap = true;</span>
+<span class="fc" id="L67">						break;</span>
+					}
+<span class="fc" id="L69">				}</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">				if (!didOverlap) {</span>
+<span class="fc" id="L71">					sortedRanges.add(merge);</span>
+				}
+<span class="fc" id="L73">			}</span>
+		}
+<span class="fc" id="L75">		return new ArrayList&lt;&gt;(sortedRanges);</span>
+	}
+
+	/**
+	 * Checks if the specified code should be excluded (contained) by any of the
+	 * known code ranges.
+	 * 
+	 * @param Code         The code to check
+	 * @param excludeRange The List of Range object to use for exclusion
+	 * @return true if the code is contained by the exclusion range; otherwise false
+	 */
+	public static boolean isExcluded(String Code, List&lt;Range&gt; excludeRange) {
+<span class="fc" id="L87">		boolean result = false;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">		if (Code != null) {</span>
+<span class="fc" id="L89">			final Matcher matcher = CodePattern.matcher(Code);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">			if (matcher.matches()) {</span>
+<span class="fc" id="L91">				result = isExcluded(Integer.valueOf(matcher.group(1)), excludeRange);</span>
+			} else {
+<span class="fc" id="L93">				throw new IllegalArgumentException(&quot;Invalid code: &quot; + Code);</span>
+			}
+		}
+<span class="fc" id="L96">		return result;</span>
+	}
+
+	/**
+	 * Checks if the specified code should be excluded (contained) by any of the
+	 * known code ranges.
+	 * 
+	 * @param Code         The code to check
+	 * @param excludeRange The List of Range object to use for exclusion
+	 * @return true if the specified code is contained by the exclusion range;
+	 *         otherwise false
+	 */
+	public static boolean isExcluded(int Code, List&lt;Range&gt; excludeRange) {
+<span class="fc" id="L109">		boolean result = false;</span>
+<span class="fc bfc" id="L110" title="All 4 branches covered.">		if (Code &lt; 0 || Code &gt; 99999) {</span>
+<span class="fc" id="L111">			throw new IllegalArgumentException(&quot;Invalid code: &quot; + Code);</span>
+		}
+<span class="fc bfc" id="L113" title="All 2 branches covered.">		if (excludeRange != null) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">			for (Range range : excludeRange) {</span>
+<span class="fc bfc" id="L115" title="All 4 branches covered.">				if (Code &gt;= range.getStart() &amp;&amp; Code &lt;= range.getEnd()) {</span>
+<span class="fc" id="L116">					result = true;</span>
+<span class="fc" id="L117">					break;</span>
+				}
+<span class="fc" id="L119">			}</span>
+		}
+<span class="fc" id="L121">		return result;</span>
+	}
+
+	/**
+	 * Checks of the specified code is in the specific range. Both start and end
+	 * ranges values are considered to be inclusive, so:
+	 * 
+	 * &lt;pre&gt;
+	 * &lt;code&gt;10 in [1,10]  = true&lt;/code&gt;
+	 * &lt;code&gt;10 in [10,20] = true&lt;/code&gt;
+	 * &lt;code&gt;10 in [1,20]  = true&lt;/code&gt;
+	 * &lt;code&gt;10 in [11,20] = false&lt;/code&gt;
+	 * &lt;/pre&gt;
+	 * 
+	 * @param Code  The code to test against the range
+	 * @param range The range to be tested for the code
+	 * @return true if the specified code is in the specified range; otherwise false
+	 */
+	public static boolean isInRange(final int Code, final Range range) {
+<span class="fc" id="L140">		boolean result = false;</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">		if (range != null) {</span>
+<span class="fc bfc" id="L142" title="All 4 branches covered.">			result = (range.getStart() &lt;= Code &amp;&amp; Code &lt;= range.getEnd());</span>
+		}
+<span class="fc" id="L144">		return result;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
